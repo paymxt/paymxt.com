@@ -11,10 +11,12 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@nuxtjs/dotenv": "^1.4.2",
     "@tresjs/cientos": "^4.0.2",
     "@tresjs/core": "^4.2.9",
     "@tresjs/nuxt": "^3.0.6",
     "dotenv": "^16.4.5",
+    "firebase": "^11.0.1",
     "gsap": "^3.12.5",
     "three": "^0.169.0"
   },

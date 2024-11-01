@@ -17,7 +17,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@tresjs/nuxt',
   ],
-
   ssr: false,
   target: 'static',
 
@@ -32,6 +31,12 @@ export default defineNuxtConfig({
       customParent: process.env.STORYBLOK_CUSTOM_PARENT as string,
       shopifyDomain: process.env.SHOPIFY_DOMAIN as string,
       shopifyToken: process.env.SHOPIFY_TOKEN as string,
+      firebaseApiKey: process.env.NUXT_FIREBASE_API_KEY,
+      firebaseAuthDomain: process.env.NUXT_FIREBASE_AUTH_DOMAIN,
+      firebaseProjectId: process.env.NUXT_FIREBASE_PROJECT_ID,
+      firebaseStorageBucket: process.env.NUXT_FIREBASE_STORAGE_BUCKET,
+      firebaseMessagingSenderId: process.env.NUXT_FIREBASE_MESSAGING_SENDER_ID,
+      firebaseAppId: process.env.NUXT_FIREBASE_APP_ID,
     },
   },
 
@@ -50,6 +55,9 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2024-07-24',
+  build: {
+    transpile: ['@firebase'], // Transpile Firebase modules for compatibility with Vite
+  },
 
   hooks: {
     async 'nitro:config'(nitroConfig) {
