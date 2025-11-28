@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useFirebase } from '@/composables/useFirebase';
 import { useRoute } from 'vue-router';
 import { collection, addDoc } from 'firebase/firestore';
@@ -9,13 +9,13 @@ const { db } = useFirebase();
 
 // Form state and variables
 const formData = ref({
-  email: '',
+  email: localStorage.getItem('newsletterEmail') || '',
   formIsSubmitting: false,
 });
 
 const formIsValid = ref(false);
-const justSubmitted = ref(false);
-const ctaText = ref("Submit");
+const justSubmitted = ref(localStorage.getItem('newsletterJustSubmitted') === 'true');
+const ctaText = ref(justSubmitted.value ? "You are a subscriber" : "Submit");
 
 // Route information for logging
 const route = useRoute();
@@ -41,6 +41,8 @@ async function subscribe() {
       await addDoc(collection(db, "newsletter-subscription"), formDataToSend);
       justSubmitted.value = true;
       ctaText.value = "You are a subscriber";
+      localStorage.setItem('newsletterEmail', formData.value.email);
+      localStorage.setItem('newsletterJustSubmitted', 'true');
       formData.value.email = ""; // Clear email field
       formIsValid.value = false; // Reset form validation
     } catch (e) {
@@ -50,11 +52,20 @@ async function subscribe() {
     }
   }
 }
+
+// Restore form state on mounted
+onMounted(() => {
+  if (justSubmitted.value) {
+    formIsValid.value = false;
+  } else {
+    checkFormValidity();
+  }
+});
 </script>
 
 <template>
   <form @submit.prevent="subscribe" class="relative">
-    <div class="flex flex-col space-y-6">
+    <div class="flex flex-col space-y-6" :class="{ 'disabled-form': justSubmitted }">
       <div class="flex items-center justify-center space-x-1 lg:justify-start">
         <h4 class="font-display text-xl">Sign up for our newsletter</h4>
       </div>
@@ -65,6 +76,7 @@ async function subscribe() {
         class="rounded-lg border bg-transparent px-6 py-4 transition-all focus:outline-none"
         required
         @input="checkFormValidity"
+        :readonly="justSubmitted"
       />
     </div>
 
@@ -72,7 +84,7 @@ async function subscribe() {
       <button
         class="cta"
         @click.prevent="subscribe"
-        :disabled="!formIsValid || formData.formIsSubmitting"
+        :disabled="!formIsValid || formData.formIsSubmitting || justSubmitted"
       >
         {{ ctaText }}
       </button>
@@ -88,3 +100,27 @@ async function subscribe() {
     </Transition>
   </form>
 </template>
+
+<style scoped>
+.disabled-form {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cta {
+  padding: 0.75rem 2rem;
+  background-color: #1a202c;
+  color: #fff;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s ease;
+}
+
+.cta:disabled {
+  background-color: #718096;
+  cursor: not-allowed;
+}
+
+input:readonly {
+  background-color: #e2e8f0;
+}
+</style>

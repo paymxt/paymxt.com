@@ -9,6 +9,7 @@ const props = defineProps({
   instagram: Object,
   youtube: Object,
   facebook: Object,
+  linkedin: Object,
 })
 
 const textColor = computed(() => {
@@ -46,6 +47,7 @@ const showSeparator = computed(() => props.background_color === 'dark')
             :instagram="instagram"
             :youtube="youtube"
             :facebook="facebook"
+            :linkedin="linkedin"
             :text_color="textColor"
           />
         </div>

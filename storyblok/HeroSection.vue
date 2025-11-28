@@ -31,7 +31,7 @@ const showVideo = computed(() => {
     !props.blok.background_video?.filename
   ) {
     return false
-  } else if (props.blok.background_video.filename) {
+  } else if (props.blok.background_video) {
     return true
   }
 })
@@ -78,7 +78,7 @@ const showVideo = computed(() => {
     </div>
     <video
       v-if="showVideo"
-      :src="blok.background_video.filename"
+      src="/videos/background.mp4"
       :alt="blok.background_video.alt"
       class="absolute left-0 top-0 z-0 h-full w-full object-cover"
       autoplay

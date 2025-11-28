@@ -165,6 +165,7 @@ onMounted(() => {
       :instagram="siteConfig.content.instagram"
       :youtube="siteConfig.content.youtube"
       :facebook="siteConfig.content.facebook"
+      :linkedin="siteConfig.content.linkedin"
     />
   </main>
 </template>
